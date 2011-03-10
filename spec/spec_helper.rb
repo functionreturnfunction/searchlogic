@@ -93,6 +93,7 @@ end
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'searchlogic'
+require 'searchlogic/rails_helpers'
 
 Spec::Runner.configure do |config|
   config.before(:each) do
