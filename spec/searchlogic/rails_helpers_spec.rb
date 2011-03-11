@@ -1,14 +1,16 @@
 require File.expand_path(File.dirname(__FILE__) + "/../spec_helper")
 
-class TestView
-  include Searchlogic::RailsHelpers
-
+class ViewBase
   def form_for *args, &block
     @form_for_args = args
     @form_for_block = block
   end
 
   attr_reader :form_for_args, :form_for_block
+end
+
+class TestView < ViewBase
+  include Searchlogic::RailsHelpers
 end
 
 describe Searchlogic::RailsHelpers do
@@ -29,16 +31,26 @@ describe Searchlogic::RailsHelpers do
       @target.form_for_block.call(args).should === args
     end
 
-    it 'should alter its given arguments if one of them is a Searchlogic::Search object' do
-      args = [Searchlogic::Search.new(nil, nil)]
+    context 'with Searchlogic::Search object provided' do
+      before :each do
+        @search = Searchlogic::Search.new(nil, nil)
+        @html_method = :the_method
+        @html_arg = {:method => @html_method}
+        @url = 'the url'
+      end
 
-      # test block passing using identify function
-      @target.form_for(*args) {|t| t}
+      it 'should alter its given arguments if one of them is a Searchlogic::Search object' do
+        # test block passing using identify function
+        @target.form_for(@search, :html => @html_arg, :url => @url) {|t| t}
 
-      @target.form_for_args.length.should == 1
-      @target.form_for_args.should === args
-      # test block passing using identify function
-      @target.form_for_block.call(args).should === args
+        @target.form_for_args.length.should == 3
+        @target.form_for_args.second.should == @search
+        args = @target.form_for_args.extract_options!
+        args[:html][:method].should == @html_method
+        args[:url].should == @url
+        # test block passing using identify function
+        @target.form_for_block.call(args).should === args
+      end
     end
   end
 end
