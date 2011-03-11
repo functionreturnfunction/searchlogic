@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'rake'
+require 'ruby-debug'
 
 begin
   require 'jeweler'
@@ -24,6 +25,7 @@ Spec::Rake::SpecTask.new(:spec) do |spec|
   spec.spec_files = FileList[
     #'spec/**/conditions_spec.rb',
     #'spec/**/ordering_conditions_spec.rb',
+    'spec/**/rails_helpers_spec.rb',
     'spec/**/association_conditions_spec.rb'
     #'spec/**/association_ordering_spec.rb'
     #'spec/**/search_spec.rb'

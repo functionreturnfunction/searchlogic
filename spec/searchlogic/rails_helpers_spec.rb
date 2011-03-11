@@ -25,11 +25,20 @@ describe Searchlogic::RailsHelpers do
 
       @target.form_for_args.length.should == 1
       @target.form_for_args[0].should === args
+      # test block passing using identify function
       @target.form_for_block.call(args).should === args
     end
 
     it 'should alter its given arguments if one of them is a Searchlogic::Search object' do
-      pending
+      args = [Searchlogic::Search.new(nil, nil)]
+
+      # test block passing using identify function
+      @target.form_for(*args) {|t| t}
+
+      @target.form_for_args.length.should == 1
+      @target.form_for_args.should === args
+      # test block passing using identify function
+      @target.form_for_block.call(args).should === args
     end
   end
 end

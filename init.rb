@@ -1,1 +1,1 @@
-require "searchlogic"
+require 'searchlogic'
