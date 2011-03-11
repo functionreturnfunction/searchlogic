@@ -58,7 +58,8 @@ module Searchlogic
         options[:html] ||= {}
         options[:html][:method] ||= :get
         options[:url] ||= url_for
-        args.unshift(:search) if args.first == search_obj
+        options[:as] = :search
+        args = [search_obj]
         args << options
       end
       super

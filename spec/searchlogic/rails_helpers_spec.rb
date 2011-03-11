@@ -43,11 +43,40 @@ describe Searchlogic::RailsHelpers do
         # test block passing using identify function
         @target.form_for(@search, :html => @html_arg, :url => @url) {|t| t}
 
-        @target.form_for_args.length.should == 3
-        @target.form_for_args.second.should == @search
+        @target.form_for_args.first.should == @search
         args = @target.form_for_args.extract_options!
         args[:html][:method].should == @html_method
         args[:url].should == @url
+        args[:as].should == :search
+        # test block passing using identify function
+        @target.form_for_block.call(args).should === args
+      end
+
+      it 'should set html and method if not set in provided arguments' do
+        # test block passing using identify function
+        @target.form_for(@search, :url => @url) {|t| t}
+
+        @target.form_for_args.first.should == @search
+        args = @target.form_for_args.extract_options!
+        args[:html][:method].should == :get
+        args[:url].should == @url
+        args[:as].should == :search
+        # test block passing using identify function
+        @target.form_for_block.call(args).should === args
+      end
+
+      it 'should set url with call to url_for if not set in provided arguments' do
+        url = 'this is the url'
+        @target.should_receive(:url_for).once.with(no_args).and_return(url)
+
+        # test block passing using identify function
+        @target.form_for(@search, :html => @html_arg) {|t| t}
+
+        @target.form_for_args.first.should == @search
+        args = @target.form_for_args.extract_options!
+        args[:html][:method].should == @html_method
+        args[:url].should == url
+        args[:as].should == :search
         # test block passing using identify function
         @target.form_for_block.call(args).should === args
       end
